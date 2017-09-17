@@ -1,0 +1,5 @@
+[myapp-staging]
+ansiblerole_myapp_staging_[1:2] ansible_connection=docker
+
+[myapp-production]
+ansiblerole_myapp_production_[1:4] ansible_connection=docker
