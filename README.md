@@ -7,19 +7,19 @@ This project includes all the elements required to run the demo.
 
 ### Demo flow
 1) setup 4 terminal/shell windows
-   a) one to startup conjur in
-   b) one to run a CLI client shell container
-   c) one to run scripts in
-   d) one to show Conjur policy and Ansible role/task files
+   - shell a) to startup conjur in
+   - shell b) to run a Conjur CLI client shell container
+   - shell c) to run demo scripts in
+   - shell d) to show Conjur policy and Ansible role/task files
 2) in shell a), run demo.sh to startup conjur, minimize it when it's ready
 3) in shell b), run ./cli-shell.sh, type cd to go to home directory, ls to verify the demo directory is mounted correctly
-4) in shell c), run ./1_load_policies.sh to start loading policies
+4) in shell c), run ./1_load_policies.sh to start loading policies, don't wait for it to finish
 5) in shell d), cd to policy
-   a) cat users.yml. 
+   - cat users.yml. 
       - Describe groups, users and role grants to create group hierarchy.
       - Emphasize RBAC & least privilege.
       - Describe how privilege increases from top to bottom, because lower groups inherit privileges from higher.
-   b) cat policy.yml. Describe how this creates root policies for staging and production envs, w/ different admin owner groups.
+   - cat policy.yml. Describe how this creates root policies for staging and production envs, w/ different admin owner groups.
    c) 
 
 ### Requirements
