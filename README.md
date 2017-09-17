@@ -5,57 +5,56 @@ Conjur OSS demo that uses an Ansible role to establish host machine identities w
 This project includes all the elements required to run the demo.
 
 ### Demo flow
-
-setup 4 terminal/shell windows and one browser window:
-Conjur shell - to startup conjur in
-CLI shell - to run a Conjur CLI client shell container
-Script shell - to run demo scripts in
-File shell - to show Conjur policy and Ansible role/task files
-Browser window - to show deployed application
-in Conjur shell, run demo.sh to startup conjur, minimize it when it's ready
-in CLI shell, run ./cli-shell.sh, type cd to go to home directory, ls to verify the demo directory is mounted correctly
-in Script shell, run ./1_load_policies.sh to start loading policies, don't wait for it to finish
-in File shell
-run conts-list.sh to show running staging and production hosts.
-describe how we're going to use Ansible and Conjur to deploy a web application, where each host is authenticated and authorized for access to only the secrets each needs, using principles of least privilege.
-cd to policy, cat users.yml.
-Describe groups, users and role grants to create group hierarchy.
-Emphasize RBAC & least privilege.
-Describe how privilege increases from top to bottom, because lower groups inherit privileges from higher.
-Point out how so far there's no actual privileges granted.
-cat policy.yml
-Describe how this creates root policies for staging and production envs, w/ different admin owner groups.
-Describe how we can now apply application policies to setup consistent security structure across each env.
-cd to apps, cat myapp.yml
-Describe how this file defines the security structure for one of potentially many apps.
-It should be managed as an application artifact, just like database schema definitions.
-It gets applied to each root environment policy to create consistent, cookie-cutter security structure.
-Describe variables, groups, privilege grants, highlight the privilege grant to the layer.
-Describe how the layer will have the name of the policy by default, how it represents a group of hosts.
-Describe the host factory redemption process, how that will establish individual machine identities for each host.
-Point out how the layer is a member of secrets_user, therefore can only read/execute secrets.
-cat myapp_grants.yml
-Discuss how these grants enable different groups to update secrets in each environment. Mention RBAC & least privilege again.
-cd ..
-in Script shell, scroll through policy load output to show how each of the policies was loaded.
-in CLI shell, run user_list.sh, host_list.sh and vars_list.sh and how there are no values yet for secrets.
-in Script shell, run 2_set_secrets.sh, don't wait for it to finish
-in File shell, cd to ansible, ls to show contents, cd to roles, ls to show ansible-role-conjur dir
-pushd into ansible/roles/ansible-role-conjur/configure-conjur-identity/tasks
-pwd to show path, how we're now deep in the ansible role implementation
-Describe how the idea behind ansible roles is to allow you to define what a server is supposed to do, instead of having to specify the exact steps needed to get a server to act a certain way. In this case we want a general approach to establishing machine identities across hosts in different environments.
-cat identity.yml, walk through quickly and describe how ansible uses this to redeem HF tokens to create host identities
-popd back to the demo directory
-run ./vars-list.sh again to show how the vars now have values.
-Now we have what we need to deploy to staging, run ./deploy.sh staging
-Narrate execution to show how Ansible is establishing indentity for two staging servers and deploying the app.
-use conts-list.sh to get the port of a staging container, enter localhost: to see deployed application, compare password displayed to password displayed by ./vars-list.sh in the CLI shell.
-pick one of the ports for a production server, show how it's not deployed in the Browser window
-run ./deploy.sh in Script window, refresh browser to show deployed app, compare database password w/ one in CLI shell.
-Review talking points of demo:
-We used Ansible and open source Conjur to secure an Ansible role deployment workflow with machine identities.
-Secrets are now encrypted and all access to them authenticated and authorized, with identities established dynamically.
-Conjur policies are "security as code" where an application's security structure can be managed as source code and consistently established across multiple environments, using automation tools like Ansible.
+1) setup 4 terminal/shell windows and one browser window:
+   - Conjur shell - to startup conjur in
+   - CLI shell - to run a Conjur CLI client shell container
+   - Script shell - to run demo scripts in
+   - File shell - to show Conjur policy and Ansible role/task files
+   - Browser window - to show deployed application
+2) in Conjur shell, run demo.sh to startup conjur, minimize it when it's ready
+3) in CLI shell, run ./cli-shell.sh, type cd to go to home directory, ls to verify the demo directory is mounted correctly
+4) in Script shell, run ./1_load_policies.sh to start loading policies, don't wait for it to finish
+5) in File shell
+   - run conts-list.sh to show running staging and production hosts.
+   - describe how we're going to use Ansible and Conjur to deploy a web application, where each host is authenticated and authorized for access to only the secrets each needs, using principles of least privilege.
+   - cd to policy, cat users.yml. 
+     - Describe groups, users and role grants to create group hierarchy.
+     - Emphasize RBAC & least privilege.
+     - Describe how privilege increases from top to bottom, because lower groups inherit privileges from higher.
+     - Point out how so far there's no actual privileges granted.
+   - cat policy.yml
+     - Describe how this creates root policies for staging and production envs, w/ different admin owner groups.
+     - Describe how we can now apply application policies to setup consistent security structure across each env.
+   - cd to apps, cat myapp.yml
+     - Describe how this file defines the security structure for one of potentially many apps.
+     - It should be managed as an application artifact, just like database schema definitions.
+     - It gets applied to each root environment policy to create consistent, cookie-cutter security structure.
+     - Describe variables, groups, privilege grants, highlight the privilege grant to the layer.
+     - Describe how the layer will have the name of the policy by default, how it represents a group of hosts.
+     - Describe the host factory redemption process, how that will establish individual machine identities for each host.
+     - Point out how the layer is a member of secrets_user, therefore can only read/execute secrets.
+   - cat myapp_grants.yml
+     - Discuss how these grants enable different groups to update secrets in each environment. Mention RBAC & least privilege again.
+   - cd ..
+6) in Script shell, scroll through policy load output to show how each of the policies was loaded.
+7) in CLI shell, run user_list.sh, host_list.sh and vars_list.sh and how there are no values yet for secrets.
+8) in Script shell, run 2_set_secrets.sh, don't wait for it to finish
+9) in File shell, cd to ansible, ls to show contents, cd to roles, ls to show ansible-role-conjur dir
+10) pushd into ansible/roles/ansible-role-conjur/configure-conjur-identity/tasks
+   - pwd to show path, how we're now deep in the ansible role implementation
+   - Describe how the idea behind ansible roles is to allow you to define what a server is supposed to do, instead of having to specify the exact steps needed to get a server to act a certain way. In this case we want a general approach to establishing machine identities across hosts in different environments.
+   - cat identity.yml, walk through quickly and describe how ansible uses this to redeem HF tokens to create host identities
+11) popd back to the demo directory
+12) run ./vars-list.sh again to show how the vars now have values.
+13) Now we have what we need to deploy to staging, run ./deploy.sh staging
+14) Narrate execution to show how Ansible is establishing indentity for two staging servers and deploying the app.
+15) use conts-list.sh to get the port of a staging container, enter localhost:<port> to see deployed application, compare password displayed to password displayed by ./vars-list.sh in the CLI shell.
+16) pick one of the ports for a production server, show how it's not deployed in the Browser window
+17) run ./deploy.sh in Script window, refresh browser to show deployed app, compare database password w/ one in CLI shell.
+18) Review talking points of demo:
+    - We used Ansible and open source Conjur to secure an Ansible role deployment workflow with machine identities.
+    - Secrets are now encrypted and all access to them authenticated and authorized, with identities established dynamically.
+    - Conjur policies are "security as code" where an application's security structure can be managed as source code and consistently established across multiple environments, using automation tools like Ansible.
 
 ### Requirements
 The following are required to run this demo
