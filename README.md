@@ -44,10 +44,10 @@ This project includes all the elements required to run the demo.
    - Describe how the idea behind ansible roles is to allow you to define what a server is supposed to do, instead of having to specify the exact steps needed to get a server to act a certain way. In this case we want a general approach to establishing machine identities across hosts in different environments.
    - cat myapp.yml and show how the role is invoked with the HF token to establish machine identity then tasks invoked to restart the app server
    - Optionally, to go deeper in the role implementation:
-      - pushd into ../roles/ansible-role-conjur/configure-conjur-identity/tasks
-      - pwd to show path, how we're now deep in the ansible role implementation
-      - cat identity.yml, walk through quickly and describe how ansible uses this to redeem HF tokens to create host identities
-      - popd back to playbooks
+     - pushd into ../roles/ansible-role-conjur/configure-conjur-identity/tasks
+     - pwd to show path, how we're now deep in the ansible role implementation
+     - cat identity.yml, walk through quickly and describe how ansible uses this to redeem HF tokens to create host identities
+     - popd back to playbooks
 11) popd back to the demo directory
 12) run ./vars-list.sh again to show how the vars now have values.
 13) Now we have what we need to deploy to staging, run "./deploy.sh staging" in the Script window
