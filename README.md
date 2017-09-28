@@ -40,17 +40,21 @@ This project includes all the elements required to run the demo.
 7) in CLI shell, run user_list.sh, host_list.sh and vars_list.sh and how there are no values yet for secrets.
 8) in Script shell, run 2_set_secrets.sh, don't wait for it to finish
 9) in File shell, cd to ansible, ls to show contents, cd to roles, ls to show ansible-role-conjur dir
-10) pushd into ansible/roles/ansible-role-conjur/configure-conjur-identity/tasks
-   - pwd to show path, how we're now deep in the ansible role implementation
-   - Describe how the idea behind ansible roles is to allow you to define what a server is supposed to do, instead of having to specify the exact steps needed to get a server to act a certain way. In this case we want a general approach to establishing machine identities across hosts in different environments.
-   - cat identity.yml, walk through quickly and describe how ansible uses this to redeem HF tokens to create host identities
+10) pushd into ansible/playbooks
+    - Describe how the idea behind ansible roles is to allow you to define what a server is supposed to do, instead of having to specify the exact steps needed to get a server to act a certain way. In this case we want a general approach to establishing machine identities across hosts in different environments.
+    - cat myapp.yml and show how the role is invoked with the HF token to establish machine identity then tasks invoked to restart the app server
+    - Optionally, to go deeper in the role implementation:
+      - pushd into ../roles/ansible-role-conjur/configure-conjur-identity/tasks
+      - pwd to show path, how we're now deep in the ansible role implementation
+      - cat identity.yml, walk through quickly and describe how ansible uses this to redeem HF tokens to create host identities
+      - popd back to playbooks
 11) popd back to the demo directory
-12) run ./vars-list.sh again to show how the vars now have values.
-13) Now we have what we need to deploy to staging, run ./deploy.sh staging
+12) in the CLI window, run ./vars-list.sh again to show how the vars now have values.
+13) Now we have what we need to deploy to staging, in the Script window run "./deploy.sh staging"
 14) Narrate execution to show how Ansible is establishing indentity for two staging servers and deploying the app.
-15) use conts-list.sh to get the port of a staging container, enter localhost:<port> to see deployed application, compare password displayed to password displayed by ./vars-list.sh in the CLI shell.
+15) In the File shell, run conts-list.sh to get the port of a staging container, browse to localhost:\<port\> to see deployed application, compare password displayed to password displayed by ./vars-list.sh in the CLI shell.
 16) pick one of the ports for a production server, show how it's not deployed in the Browser window
-17) run ./deploy.sh in Script window, refresh browser to show deployed app, compare database password w/ one in CLI shell.
+17) run "./deploy.sh production" in Script window, refresh browser to show deployed app, compare database password w/ one in CLI shell.
 18) Review talking points of demo:
     - We used Ansible and open source Conjur to secure an Ansible role deployment workflow with machine identities.
     - Secrets are now encrypted and all access to them authenticated and authorized, with identities established dynamically.
