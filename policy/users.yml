@@ -1,3 +1,4 @@
+# Create groups
 - !group security_ops
 
 - !group team_leads
@@ -13,6 +14,8 @@
   role: !group team_leads
   member: !group security_ops
 
+
+# Create users
 - !user
   id: jason.vanderhoof
   annotations:
@@ -55,6 +58,8 @@
     last_name: Blake
     email: terrance.blake@cyberark.com
 
+
+# Grant group roles to users (i.e. add users to groups)
 - !grant
   role: !group developers
   members:
