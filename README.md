@@ -74,6 +74,7 @@ This project includes all the elements required to run the demo.
   - in **Script window** run `./3_update_entitlements.sh staging`, refresh browser to show rotated values of deployed app - explain how this is only for the secrets that were dynamically retrieved.
   - run `./restart.sh staging` and show that it fails with status `401` unauthorized.
   - pick one of the ports for a staging server, show how it's not deployed in the **Browser window**
+  - Highlight how the production environment is not affected because it's security rules are under a different policy namespace
   - in `./policy/apps/myapp.yml` uncomment
 ```
   # Application layer has the secrets-users role
