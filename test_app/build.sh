@@ -1,3 +1,3 @@
 #!/bin/bash -ex
 
-docker build -t jvanderhoof/ansiblefest:latest .
+docker build -t ansiblerole:latest .
