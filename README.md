@@ -2,6 +2,8 @@
 
 Conjur OSS demo that uses an Ansible role to establish host machine identities with host factory tokens First demonstrated at AnsibleFest 2017. This repo copied from https://github.com/jvanderhoof/Ansiblefest-2017 with additional demo scripts added by JHunt.
 
+Then Kumbirai Tanekha introduced modifications to more strongly deliver the message of the [Best Practices For Securing Containerized Applications](https://drive.google.com/open?id=1HsTIFrbjuX5mN4y3b_UUX9uf595fdvyv8eGTGXCTrWU) presentation 
+
 This project includes all the elements required to run the demo.
 
 ### Demo flow
