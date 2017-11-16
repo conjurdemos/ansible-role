@@ -17,7 +17,7 @@ This project includes all the elements required to run the demo.
 5) in **File shell**
    - run `./conts-list.sh` to show running staging and production hosts.
    - describe how we're going to use Ansible and Conjur to deploy a web application, where each host is authenticated and authorized for access to only the secrets each needs, using principles of least privilege.
-   - `cd policy`, `cat users.yml`. 
+   - `pushd policy`, `cat users.yml`. 
      - Describe groups, users and role grants to create group hierarchy.
      - Emphasize RBAC & least privilege.
      - Describe how privilege increases from top to bottom, because lower groups inherit privileges from higher.
@@ -32,10 +32,10 @@ This project includes all the elements required to run the demo.
      - Describe variables, groups, privilege grants, highlight the privilege grant to the layer.
      - Describe how the layer will have the name of the policy by default, how it represents a group of hosts.
      - Describe the host factory redemption process, how that will establish individual machine identities for each host.
-     - Point out how the layer is a member of secrets_user, therefore can only read/execute secrets.
+     - Point out how the layer is a member of secrets_user, therefore can only read/execute secrets. **[1]**
    - `cat myapp_grants.yml`
      - Discuss how these grants enable different groups to update secrets in each environment. Mention RBAC & least privilege again.
-   - cd ..
+   - `popd`
 6) in **Script shell**, scroll through policy load output to show how each of the policies was loaded.
 7) in **CLI shell**, run `./user_list.sh`, `./host_list.sh` and `./vars_list.sh` and how there are no values yet for secrets.
 8) in Script shell, run `./2_set_secrets.sh`, don't wait for it to finish
@@ -43,6 +43,7 @@ This project includes all the elements required to run the demo.
 10) pushd into ansible/playbooks
     - Describe how the idea behind ansible roles is to allow you to define what a server is supposed to do, instead of having to specify the exact steps needed to get a server to act a certain way. In this case we want a general approach to establishing machine identities across hosts in different environments.
     - `cat myapp.yml` and show how the role is invoked with the HF token to establish machine identity then tasks invoked to restart the app server
+    - Describe how Ansible deploys the application using `summon` to fetch and inject secrets using machine identity.
     - Optionally, to go deeper in the role implementation:
       - `pushd ../roles/ansible-role-conjur/configure-conjur-identity/tasks`
       - `pwd` to show path, how we're now deep in the ansible role implementation
@@ -50,12 +51,43 @@ This project includes all the elements required to run the demo.
       - `popd` back to playbooks
 11) `popd` back to the demo directory
 12) in the **CLI window**, run `./vars-list.sh` again to show how the vars now have values.
-13) Now we have what we need to deploy to staging, in the **Script window** run `./deploy.sh staging`
-14) Narrate execution to show how **Ansible is establishing indentity** for two staging servers and deploying the app.
-15) In the **File shell**, run `./conts-list.sh` to get the port of a staging container, **browse to localhost:\<port\>** to see deployed application, compare password displayed to password displayed by `./vars-list.sh` in the CLI shell.
-16) pick one of the ports for a production server, show how it's not deployed in the Browser window
-17) run `./deploy.sh production` in Script window, refresh browser to show deployed app, compare database password w/ one in CLI shell.
-18) Review talking points of demo:
+13) in **File shell**
+   - `pushd test_app`, `cat secrets.yml` 
+     - Explain how `secrets.yml` allows us to use variable ids to specify references to secrets in Conjur and requires no knowledge of where or how to retrieve secrets.
+     - Explain how `summon` and `conjur-api-ruby` are used to statically and dynamically retrieve secrets, respectively.
+     - `cat foo.rb`
+     - Point out how there are no secrets present in the application code.
+   - `popd`
+14) Now we have what we need to deploy to staging, in the **Script window** run `./deploy.sh staging`
+15) Narrate execution to show how **Ansible is establishing indentity** for two staging servers and deploying the app.
+16) In the **File shell**, run `./conts-list.sh` to get the port of a staging container, **browse to localhost:\<port\>** to see deployed application, compare password displayed to password displayed by `./vars-list.sh` in the CLI shell.
+17) pick one of the ports for a production server, show how it's not deployed in the Browser window
+18) run `./deploy.sh production` in Script window, refresh browser to show deployed app, compare database password w/ one in CLI shell.
+19) Demonstrate declarative entitlement revocation
+  - in `./policy/apps/myapp.yml` comment out 
+```
+  # Application layer has the secrets-users role
+#  - !grant
+#    role: !group secrets-users
+#    member: !layer
+```
+  - in **Script window** run `./3_update_entitlements.sh staging`, refresh browser to show rotated values of deployed app - explain how this is only for the secrets that were dynamically retrieved.
+  - run `./restart.sh staging` and show that it fails with status `401` unauthorized.
+  - pick one of the ports for a staging server, show how it's not deployed in the **Browser window**
+  - in `./policy/apps/myapp.yml` uncomment
+```
+  # Application layer has the secrets-users role
+  - !grant
+    role: !group secrets-users
+    member: !layer
+```
+  - in **Script window** run `./restart.sh staging`.
+  - refresh the staging server page in the **Browser window** and show the deployed app with all secret values.
+  - Point out that no application code was modified in order to revoke
+  - **Optionally** show that revocation could be done by rotating a single host api key.  
+  
+
+20) Review talking points of demo:
     - We used Ansible and open source Conjur to secure an Ansible role deployment workflow with machine identities.
     - Secrets are now encrypted and all access to them authenticated and authorized, with identities established dynamically.
     - Conjur policies are "security as code" where an application's security structure can be managed as source code and consistently established across multiple environments, using automation tools like Ansible.
