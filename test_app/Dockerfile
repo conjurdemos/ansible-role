@@ -7,7 +7,7 @@ RUN apt-get update -y && \
     apt-add-repository -y ppa:brightbox/ruby-ng && \
     apt-get update -y
 
-RUN apt-get install -y ruby2.4 ruby2.4-dev python
+RUN apt-get install -y ruby2.4 ruby2.4-dev python && apt-get update && apt-get install -y gcc build-essential
 
 RUN gem install bundler --no-rdoc --no-ri
 
@@ -15,7 +15,10 @@ RUN mkdir -p /opt/app
 WORKDIR /opt/app
 
 COPY Gemfile /opt/app/
-COPY Gemfile.lock /opt/app/
 RUN bundle install
 
 COPY . /opt/app
+
+RUN mkdir -p /usr/local/lib/summon
+COPY summon-conjur /usr/local/lib/summon
+COPY summon /usr/local/bin

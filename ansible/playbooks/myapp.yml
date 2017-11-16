@@ -18,9 +18,4 @@
       when: current_application_process.stdout != ''
 
     - name: Start application with secrets from Conjur
-      summon_conjur:
-        variables:
-          DB_USERNAME: "!var {{app_environment}}/myapp/database/username"
-          DB_PASSWORD: "!var {{app_environment}}/myapp/database/password"
-          STRIPE_API_KEY: "!var {{app_environment}}/myapp/stripe/private_key"
-        command: rackup -p 4567 --host 0.0.0.0 -D
+      shell: summon -D ENV={{app_environment}} rackup -p 4567 --host 0.0.0.0 -D

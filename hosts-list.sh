@@ -1,7 +1,7 @@
 #!/bin/bash -e
 clear
 echo "Layers:"
-conjur list -i -k layer
+conjur list -i -k layer | jq .
 echo
 echo "Hosts:"
-conjur list -i -k host
+conjur list -i -k host | jq .
