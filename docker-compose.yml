@@ -17,6 +17,14 @@ services:
     links:
       - pg
 
+  ansible:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/conjurinc/ansible-role-conjur/
+      - /var/run/docker.sock:/var/run/docker.sock
+
   conjur_cli:
     image: conjurinc/cli5
     environment:
@@ -46,3 +54,17 @@ services:
       - 4567
     environment:
       ENV: production
+
+  conjur-proxy-nginx:
+    build:
+     context: .
+     dockerfile: Dockerfile_nginx
+    entrypoint: nginx-debug -g 'daemon off;'
+    environment:
+      TERM: xterm
+    ports:
+      - "8080:80"
+      - "8443:443"
+    depends_on:
+      - conjur
+      - conjur_cli
