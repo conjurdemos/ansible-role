@@ -20,7 +20,7 @@
       when: current_application_process.stdout != ''
 
     - name: Install summon and summon-conjur
-      shell: curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash; curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | sed -e 's/curl -sSL -C/curl -sSL/g' | bash;
+      shell: curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash; curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash;
 
     - name: Start application with secrets from Conjur
       shell: summon -D ENV={{app_environment}} rackup -p 4567 --host 0.0.0.0 -D
