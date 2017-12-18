@@ -11,16 +11,19 @@
       conjur_validate_certs: yes
 
   tasks:
-    - name: Find current running Application process
-      shell: pgrep ruby || true
-      register: current_application_process
 
-    - name: Stop application server (if running)
-      shell: kill -9 {{current_application_process.stdout}}
-      when: current_application_process.stdout != ''
+    - name: Stop application service
+      service: name={{ ansible_env.APP_NAME }} state=stopped
 
-    - name: Install summon and summon-conjur
-      shell: curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash; curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash;
+    - name: Install summon-conjur
+      shell: "/usr/local/lib/summon/summon-conjur -v | grep $(curl -s https://api.github.com/repos/cyberark/summon/releases/latest | grep -o '\"tag_name\": \"[^\"]*' | grep -o '[^v\"]*$') || curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash"
 
-    - name: Start application with secrets from Conjur
-      shell: summon -D ENV={{app_environment}} rackup -p 4567 --host 0.0.0.0 -D
+    - name: Copy summon in
+      copy: src={{item}} dest=/usr/local/bin mode=+x
+      with_first_found:
+        - files:
+            - /conjurinc/ansible-role-conjur/summon
+          skip: true
+
+    - name: Start application service with secrets from Conjur retrieved via summon
+      service: name={{ ansible_env.APP_NAME }} state=started

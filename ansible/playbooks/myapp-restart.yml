@@ -3,13 +3,5 @@
     app_environment: "{{ lookup('env', 'APP_ENV') }}"
 
   tasks:
-    - name: Find current running Application process
-      shell: pgrep ruby || true
-      register: current_application_process
-
-    - name: Stop application server (if running)
-      shell: kill -9 {{current_application_process.stdout}}
-      when: current_application_process.stdout != ''
-
-    - name: Start application with secrets from Conjur
-      shell: summon -D ENV={{app_environment}} rackup -p 4567 --host 0.0.0.0 -D
+    - name: Restart application service with secrets from Conjur retrieved via summon
+      service: name={{ ansible_env.APP_NAME }} state=restarted

@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jason Vanderhoof <jason.vanderhoof@cyberark.com>
+MAINTAINER Kumbirai Tanekha <kumbirai.tanekha@cyberark.com>
 
 RUN apt-get update -y && \
     apt-get install -y software-properties-common && \
@@ -20,3 +20,7 @@ COPY Gemfile /opt/app/
 RUN bundle install
 
 COPY . /opt/app
+
+ENV APP_NAME=test_app
+RUN mv /opt/app/service/initd.sh /etc/init.d/$APP_NAME
+RUN update-rc.d $APP_NAME defaults
